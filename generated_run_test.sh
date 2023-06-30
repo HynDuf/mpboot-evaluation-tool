@@ -1,0 +1,2 @@
+#!/bin/bash
+/datausers/ioit/thaontp/hynduf/test/cmd/mpboot-avx -s /datausers/ioit/thaontp/hynduf/test/data/example/example.phy  -aco -pre /datausers/ioit/thaontp/hynduf/test/log/test/example.phy_ACO_3545 -seed 3545
