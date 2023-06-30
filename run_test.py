@@ -10,17 +10,6 @@ for SUF in SUFFIXES:
         exit(0)
 create_necessary_dirs()
 
-def job_sub_commands_generator(filename):
-    for i in range(NUM_RUNS):
-        for id in range(len(COMMANDS)):
-            s = COMMANDS[id].replace("?", filename) + '_' + str(SEEDS[i]) + ' -seed ' + str(SEEDS[i])
-            script_path = SCRIPTS_PATH + "/" + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ".sh"
-            with open(script_path, "w") as f:
-                f.write("#!/bin/bash\n")
-                f.write(s)
-            c = 'qsub -q long_cpu -N ' + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ' -l select=1:ncpus=1 -j oe ' + script_path
-            os.system(c)
-
 # Get list of all .phy files in the given directory
 list_of_files_desc_size = filter(
     lambda x: os.path.isfile(os.path.join(DATA_PATH, x)) and x.endswith(".phy"
@@ -34,6 +23,22 @@ list_of_files_desc_size.reverse()
 
 print("There are " + str(len(list_of_files_desc_size)) + " files in DATA_PATH = " + DATA_PATH)
 assert(NUM_DATASET_FILES == len(list_of_files_desc_size))
+
+while True:
+    user_input = input("Do you want to continue? Type 'yes' to proceed: ")
+    if user_input.lower() == "yes":
+        break  # Exit the loop if the user enters 'yes'
+
+def job_sub_commands_generator(filename):
+    for i in range(NUM_RUNS):
+        for id in range(len(COMMANDS)):
+            s = COMMANDS[id].replace("?", filename) + '_' + str(SEEDS[i]) + ' -seed ' + str(SEEDS[i])
+            script_path = SCRIPTS_PATH + "/" + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ".sh"
+            with open(script_path, "w") as f:
+                f.write("#!/bin/bash\n")
+                f.write(s)
+            c = 'qsub -q long_cpu -N ' + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ' -l select=1:ncpus=1 -j oe ' + script_path
+            os.system(c)
 
 # Subscribe jobs to the system
 for file_name in list_of_files_desc_size:
