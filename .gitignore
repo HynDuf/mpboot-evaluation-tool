@@ -1,5 +1,6 @@
 *.o*
 *.pyc
-log/*
-cmd/*
+log
+cmd
 debug
+result
