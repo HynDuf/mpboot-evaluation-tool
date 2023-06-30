@@ -218,20 +218,20 @@ def plot_aco_usages(aco_csv_file, folder_path):
 def plot_summarise_all_versions(summarise_csv_file):
     # Read the data from the CSV file
     versions = []
-    avg_stds = []
+    sum_stds = []
     sum_cputime = []
 
     with open(summarise_csv_file, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             versions.append(row['Version'])
-            avg_stds.append(float(row['Average STDs']))
+            sum_stds.append(float(row['Average STDs']))
             sum_cputime.append(float(row['Sum of Time (secs)']))
 
     # Sort the versions by Average STDs
-    sorted_indices_stds = np.argsort(avg_stds)
+    sorted_indices_stds = np.argsort(sum_stds)
     sorted_versions_stds = [versions[i] for i in sorted_indices_stds]
-    sorted_avg_stds = [avg_stds[i] for i in sorted_indices_stds]
+    sorted_avg_stds = [sum_stds[i] for i in sorted_indices_stds]
     sorted_sum_cputime_stds = [sum_cputime[i] for i in sorted_indices_stds]
 
     # Create a plot sorted by Average STDs
@@ -268,12 +268,12 @@ def plot_summarise_all_versions(summarise_csv_file):
     fig.tight_layout()
 
     # Save the plot to a file
-    plt.savefig(RESULT_PATH + '/summarise_sorted_by_avg_stds.png')
+    plt.savefig(RESULT_PATH + '/summarise_sorted_by_sum_stds.png')
 
     # Sort the versions by Sum of Time
     sorted_indices_time = np.argsort(sum_cputime)
     sorted_versions_time = [versions[i] for i in sorted_indices_time]
-    sorted_avg_stds_time = [avg_stds[i] for i in sorted_indices_time]
+    sorted_avg_stds_time = [sum_stds[i] for i in sorted_indices_time]
     sorted_sum_cputime_time = [sum_cputime[i] for i in sorted_indices_time]
 
     # Create a plot sorted by Sum of Time
