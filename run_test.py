@@ -18,7 +18,7 @@ def job_sub_commands_generator(filename):
             with open(script_path, "w") as f:
                 f.write("#!/bin/bash\n")
                 f.write(s)
-            c = 'qsub -q para_cpu -N ' + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ' -l select=1:ncpus=1 -j oe ' + script_path
+            c = 'qsub -q long_cpu -N ' + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ' -l select=1:ncpus=1 -j oe ' + script_path
             os.system(c)
 
 # Get list of all .phy files in the given directory

@@ -4,3 +4,4 @@ log
 cmd
 debug
 result
+__pycache__

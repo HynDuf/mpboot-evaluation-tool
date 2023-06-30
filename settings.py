@@ -2,7 +2,7 @@ import random
 # ======================================= EDIT THIS ======================================= #
 
 # Name of the result folder
-TEST_NAME = "test_serious_21_41_30_06"
+TEST_NAME = "test_serious_04_50_01_07"
 
 PATH = "/datausers/ioit/thaontp/hynduf/test"
 
