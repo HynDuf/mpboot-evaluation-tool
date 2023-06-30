@@ -13,6 +13,8 @@ for filename in os.listdir(LOG_PATH):
 all_file_counts_valid = all(count == expected_file_count for count in file_counts.values())
 
 if not all_file_counts_valid:
+    for count in file_counts.values():
+        print(count)
     print("Number of log files is not valid.")
     exit(0)
 

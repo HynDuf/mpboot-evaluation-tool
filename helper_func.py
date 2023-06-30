@@ -12,7 +12,7 @@ avg_score_version_testfile = {}
 avg_cputime_version_testfile = {}
 aco_num_version_testfile = {}
 stds_version_testfile = {}
-avg_stds_version = {}
+sum_stds_version = {}
 sum_cputime_version = {}
 
 def create_dirs(path):
@@ -24,10 +24,20 @@ def create_dirs(path):
 
 def create_necessary_dirs():
     create_dirs(LOG_PATH)
+    create_dirs(SCRIPTS_PATH)
     if not os.path.exists(DATA_PATH):
         print(f"Error: DATA_PATH {DATA_PATH} doesn't exist.")
         exit(0)
 
+def remove_files_in_directory(directory_path):
+    if os.path.exists(directory_path) and os.path.isdir(directory_path):
+        for filename in os.listdir(directory_path):
+            file_path = os.path.join(directory_path, filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        print(f"All files in the directory '{directory_path}' have been removed.")
+    else:
+        print(f"Directory '{directory_path}' does not exist.")
 
 def update_dict_max(dictionary, key, value):
     if key in dictionary:
@@ -93,6 +103,8 @@ def extract_n_from_file(filename):
     # Returns: 205
     if filename == "example":
         return 17
+    elif filename == "prot_M8569_164_383_edited":
+        return 164
     pattern = r'_(\d+)_\d+$'
     match = re.search(pattern, filename)
     if match:
@@ -157,8 +169,7 @@ def analyse_phase_3():
     for version in avg_score_version_testfile:
         for testfile in global_best_score:
             update_dict1_add(sum_cputime_version, version, avg_cputime_version_testfile[version][testfile])
-            update_dict1_add(avg_stds_version, version, stds_version_testfile[version][testfile])
-        avg_stds_version[version] /= NUM_DATASET_FILES
+            update_dict1_add(sum_stds_version, version, stds_version_testfile[version][testfile])
 
 def plot_aco_usages(aco_csv_file, folder_path):
     # Read the data from the CSV file
@@ -309,14 +320,14 @@ def output_result():
             })
     # summarise.csv saved summarise values or each version like Average STDS, Sum of Time (secs)
     with open(RESULT_PATH + "/summarise.csv", "w") as csvfile:
-        fieldnames = ["Version", "Average STDs", "Sum of Time (secs)"]
+        fieldnames = ["Version", "Sum of STDs", "Sum of Time (secs)"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
         for version in sum_cputime_version:
             writer.writerow({
                 "Version": version,
-                "Average STDs": avg_stds_version[version],
+                "Sum of STDs": sum_stds_version[version],
                 "Sum of Time (secs)": sum_cputime_version[version],
             })
 
