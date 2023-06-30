@@ -49,7 +49,7 @@ mpboot-evaluation-tool
 - Metrics:
     - Standard Deviations from all-time best score (STDs):
         - STDs (1 dataset file):
-            - $\sqrt{\dfrac{\sum\left({MP_{i}-MP_{all}}\right)^2}{NUM\_RUNS}}$
+            - $\sqrt{\dfrac{\sum\left({MP_{i}-MP_{all}}\right)^2}{NUMRUNS}}$
             - Where:
                 - $MP_i$ is MP score of the i-th run (seed)
                 - $MP_{all}$ is the globally best MP score found on all the runs among all the MPBoot versions
