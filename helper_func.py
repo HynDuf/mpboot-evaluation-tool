@@ -118,6 +118,7 @@ def analyse_phase_1():
         if filename.endswith('.log'):
             testfile, version = extract_testfile_and_version(filename)
             with open(LOG_PATH + "/" + filename, 'r') as file:
+                print(filename)
                 content = file.read()
                 cur_best_score = get_int_with_prefix(content, "BEST SCORE FOUND : ")
                 cur_init_score = get_int_with_prefix(content, "Current best score: ")
@@ -225,25 +226,25 @@ def plot_summarise_all_versions(summarise_csv_file):
         reader = csv.DictReader(csvfile)
         for row in reader:
             versions.append(row['Version'])
-            sum_stds.append(float(row['Average STDs']))
+            sum_stds.append(float(row['Sum of STDs']))
             sum_cputime.append(float(row['Sum of Time (secs)']))
 
-    # Sort the versions by Average STDs
+    # Sort the versions by Sum STDs
     sorted_indices_stds = np.argsort(sum_stds)
     sorted_versions_stds = [versions[i] for i in sorted_indices_stds]
     sorted_avg_stds = [sum_stds[i] for i in sorted_indices_stds]
     sorted_sum_cputime_stds = [sum_cputime[i] for i in sorted_indices_stds]
 
-    # Create a plot sorted by Average STDs
+    # Create a plot sorted by Sum STDs
     fig, ax1 = plt.subplots()
     color_stds = 'tab:red'
     ax1.set_xlabel('Version')
-    ax1.set_ylabel('Average STDs', color=color_stds)
+    ax1.set_ylabel('Sum of STDs', color=color_stds)
 
     bar_width = 0.35  # Width of the bars
     x_pos = np.arange(len(sorted_versions_stds))  # X positions for the bars
 
-    ax1.bar(x_pos, sorted_avg_stds, color=color_stds, width=bar_width, label='Average STDs')
+    ax1.bar(x_pos, sorted_avg_stds, color=color_stds, width=bar_width, label='Sum of STDs')
     ax1.tick_params(axis='y', labelcolor=color_stds)
 
     # Create a twin axes for the Sum of Time
@@ -279,9 +280,9 @@ def plot_summarise_all_versions(summarise_csv_file):
     # Create a plot sorted by Sum of Time
     fig, ax3 = plt.subplots()
     ax3.set_xlabel('Version')
-    ax3.set_ylabel('Average STDs', color=color_stds)
+    ax3.set_ylabel('Sum STDs', color=color_stds)
 
-    ax3.bar(x_pos, sorted_avg_stds_time, color=color_stds, width=bar_width, label='Average STDs')
+    ax3.bar(x_pos, sorted_avg_stds_time, color=color_stds, width=bar_width, label='Sum of STDs')
     ax3.tick_params(axis='y', labelcolor=color_stds)
 
     ax4 = ax3.twinx()

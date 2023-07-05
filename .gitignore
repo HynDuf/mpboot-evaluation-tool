@@ -5,3 +5,4 @@ cmd
 debug
 result
 __pycache__
+*.zip
