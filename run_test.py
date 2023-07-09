@@ -1,6 +1,4 @@
-import sys
 import os
-import time
 from settings import *
 from helper_func import *
 
@@ -33,11 +31,12 @@ def job_sub_commands_generator(filename):
     for i in range(NUM_RUNS):
         for id in range(len(COMMANDS)):
             s = COMMANDS[id].replace("?", filename) + '_' + str(SEEDS[i]) + ' -seed ' + str(SEEDS[i])
-            script_path = SCRIPTS_PATH + "/" + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ".sh"
-            with open(script_path, "w") as f:
-                f.write("#!/bin/bash\n")
-                f.write(s)
-            c = 'qsub -q long_cpu -N ' + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ' -l select=1:ncpus=1 -j oe ' + script_path
+            # script_path = SCRIPTS_PATH + "/" + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ".sh"
+            # with open(script_path, "w") as f:
+            #     f.write("#!/bin/bash\n")
+            #     f.write(s)
+            # c = 'qsub -q long_cpu -N ' + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ' -l select=1:ncpus=1 -j oe ' + script_path
+            c = 'bsub -q normal -J ' + filename + "_" + SUFFIXES[id] + "_" + str(SEEDS[i]) + ' "' + s + '"'
             os.system(c)
 
 # Subscribe jobs to the system

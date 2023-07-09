@@ -72,6 +72,64 @@ def update_dict3_add(dictionary, key1, key2, key3, value):
         dictionary[key1][key2][key3] = 0
     dictionary[key1][key2][key3] += value
 
+def check_valid_num_log_files():
+    # Get list of all files only in the given directory
+    list_of_files_desc_size = filter(
+        lambda x: os.path.isfile(os.path.join(LOG_PATH, x)),
+        os.listdir(LOG_PATH))
+
+    # Sort list of file names by size
+    list_of_files_desc_size = sorted(
+        list_of_files_desc_size,
+        key=lambda x: os.stat(os.path.join(LOG_PATH, x)).st_size)
+    list_of_files_desc_size.reverse()
+
+    # Check if enough of log files
+    expected_file_count = NUM_RUNS * len(COMMANDS) * NUM_DATASET_FILES
+    file_extensions = ['.log', '.mpboot', '.treefile']
+    file_counts = {ext: 0 for ext in file_extensions}
+    for filename in os.listdir(LOG_PATH):
+        file_extension = os.path.splitext(filename)[1]
+        if file_extension in file_extensions:
+            file_counts[file_extension] += 1
+    all_file_counts_valid = all(count == expected_file_count for count in file_counts.values())
+
+    if not all_file_counts_valid:
+        for key in file_counts:
+            print(key, " : ", file_counts[key])
+        print("Number of log files is not valid.")
+
+        mp = {}
+        mp_version = {}
+        mp_seeds = {}
+        for file in list_of_files_desc_size:
+            if file.endswith(".log") or file.endswith(".treefile") or file.endswith(".mpboot"):
+                parts = file.split('.')
+                testfile_parts = parts[0].split('_')
+                version_parts = parts[-2].split('_')
+                f = '_'.join(testfile_parts[:])
+                v = version_parts[-2]
+                s = version_parts[-1]
+
+                update_dict1_add(mp, f, 1)
+                update_dict1_add(mp_version, v, 1)
+                update_dict1_add(mp_seeds, s, 1)
+
+        if len(mp) != NUM_DATASET_FILES:
+            print(len(mp))
+            print("Missing an entire test file")
+    
+        for key in mp:
+            if mp[key] != len(COMMANDS) * NUM_RUNS * 3:
+                print(key)
+        for key in mp_version:
+            if mp_version[key] != NUM_DATASET_FILES * NUM_RUNS * 3:
+                print(key)
+        for key in mp_seeds:
+            if mp_seeds[key] != len(COMMANDS) * NUM_DATASET_FILES * 3:
+                print(key)
+        exit(0)
+
 def find_next_whitespace(string, start_position):
     return next((i + start_position for i, char in enumerate(string[start_position:]) if char.isspace()), -1)
 
